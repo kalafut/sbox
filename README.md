@@ -1,75 +1,10 @@
-sbox allows you to use
+*DON'T USE*
 
+sbox allows you to augment any "folder than syncs" provider in a secure manner. There are commercial solutions for this, such as [Boxcryptor](https://www.boxcryptor.com), but all of them involve installing complicated closed source software. sbox is intended to forego elaborate features and focus on simplicity.
 
 Goals
 =====
 
-* Secure
-* Works on port 80
-* Portable
-
-Assumptions
-===========
-* A hash will be the SHA256 hash of the data
-* All data will be binary (i.e. not converted to hex or other more readable formats)
-
-Theory
-======
-
-* Client and Server have a shared key ("Server Key")
-* All data between client and server is encrypted with shared key
-* Clients have a key that is common to all clients, but isn't stored on the server ("Client Key").
-* All file contents and path names will be encrypted with the Client Key prior to transmission
-
-Server Operations
-=================
-* `get_object`
-* `put_object`
-* `delete_object`
-* `get_object_list`
-
-Objects
-=======
-An object consists of:
-
-Unencrypted Elements:
-* ID
-* Data Hash ("Hash")
-
-Encrypted Elements:
-* Path
-* Data
-
-ID
---
-Object IDs are the hash of the full path and filename. Leading and trailing white-space will be trimmed. Path separators will be converted to forward slashes on Windows systems. Case is significant.
-
-Data Hash
-----------------
-The Data Hash or "Hash" of an object will the the hash of the uncompressed and unencrypted file's contents.
-
-Path
-----
-Path will be the full path and filename. This string is identical to the one used to generated ID.
-
-Data
-----
-Data will be the compressed file data.
-
-Sync logic
-==========
-The client must store the last Hash ("common hash") for each file that was common with the server.  At the start of sync, a the hash of every client file is computed and the object list is requested from the server.
-
-* If an object ID exists only on the server, the client will `get` it.
-* If an object ID exists only on the client, the client will `put` it.
-* If an object ID exists on both the client and server and it will be resolved so:
-
-break
-
-    if server_hash != client_hash:
-        if client_hash != common_hash && server_hash == common_hash:
-            put client object
-        if client_hash == common_hash && server_hash != common_hash:
-            get server object
-        if client_hash != common_hash && server_hash != common_hash:
-            get server object and mark as duplicate
+* Secure. Use only will established crypto tools with no hand-rolled solutions.
+* Simple to use. Rely on existing network cloud sync solutions.
+* Simple to verify. Users should be able to easily review and understand the source code.
