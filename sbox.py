@@ -4,7 +4,6 @@ import hashlib
 import os
 import py
 import json
-import random
 import uuid
 import requests
 import cPickle as pickle
@@ -14,14 +13,13 @@ from py.path import local as l
 
 
 OBJ_ID_LEN = 20
-OBJ_ID_CHARS = '0123456789abcdef'
 
 EncryptedFile = namedtuple('EncryptedFile', ['id','filename', 'sha1', 'deleted'])
 EncryptedFile.__eq__ = lambda a,b : ((a.id == None or b.id == None) or (a.id == b.id)) and a.filename == b.filename and a.sha1 == b.sha1 and a.deleted == b.deleted
 
 class Catalog:
     def __init__(self, filename=None):
-        self.catalog_id = random_id()
+        self.catalog_id = crypto.random_hex(OBJ_ID_LEN)
         self.seq_id = 0
 
         if not filename:
@@ -52,7 +50,7 @@ class Catalog:
 
     def add_file(self, path):
         self.objects.append(
-            EncryptedFile(id=random_id(), filename=path, sha1=py.path.local(path).computehash(hashtype='sha1'), deleted=False)
+            EncryptedFile(id=crypto.random_hex(OBJ_ID_LEN), filename=path, sha1=py.path.local(path).computehash(hashtype='sha1'), deleted=False)
         )
 
     def files(self):
@@ -128,19 +126,12 @@ class Blob:
         return self.hmac.digest() + self.data
 
 
-
-
 def scan(r):
     fs = []
     for root, dirs, files in os.walk(r):
         for name in files:
             o = PryObject(os.path.join(root, name))
             self.objects[o.id.hexdigest()] = o
-
-
-def random_id():
-    rng = random.SystemRandom()
-    return ''.join([rng.choice(OBJ_ID_CHARS) for i in xrange(OBJ_ID_LEN)])
 
 
 def encrypt_folder(source, dest):

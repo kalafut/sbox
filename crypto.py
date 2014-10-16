@@ -1,7 +1,14 @@
 import hashlib
 import hmac
 import gnupg
+import random
+import string
 import subprocess
+
+hex_chars = '0123456789abcdef'
+alphanum_chars = string.ascii_letters + string.digits
+
+rng = random.SystemRandom()
 
 class Cipher(object):
     def __init__(self, key):
@@ -48,3 +55,12 @@ def secure_compare(x, y):
         return False
     diffs = sum(a != b for a, b in zip(x, y))
     return diffs == 0
+
+def random_hex(length):
+    return random_string(hex_chars, length)
+
+def random_key(length):
+    return random_string(alphanum_chars, length)
+
+def random_string(charset, length):
+    return ''.join([rng.choice(charset) for i in xrange(length)])

@@ -1,4 +1,4 @@
-from prybox.net import Net
+from sbox.net import Net
 import pytest
 
 @pytest.mark.skipif(True, reason="TBD")

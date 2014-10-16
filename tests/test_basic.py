@@ -1,17 +1,11 @@
 import os
-import prybox.prybox
-from prybox.prybox import EncryptedFile
-from prybox.crypto import GPGCipher
+import sbox.sbox
+from sbox.sbox import EncryptedFile
+from sbox.crypto import GPGCipher, random_hex
 from py.path import local as l
 
 import py
 
-# content of test_sample.py
-def func(x):
-    return x + 1
-
-def test_answer(tmpdir):
-    assert func(3) == 4
 
 def test_add_file(tmpdir):
     p = tmpdir.join("t1")
@@ -19,7 +13,7 @@ def test_add_file(tmpdir):
     p = tmpdir.join("t2")
     p.write("Sample text 2")
 
-    c = prybox.prybox.Catalog()
+    c = sbox.sbox.Catalog()
 
     tmpdir.chdir()
     c.add_file("t1")
@@ -32,7 +26,7 @@ def test_add_path(tmpdir):
     tmpdir.join("t2").write("Sample text 2")
     tmpdir.join("subdir", "t3").write("Sample text 3", ensure=True)
 
-    c = prybox.prybox.Catalog()
+    c = sbox.sbox.Catalog()
 
     tmpdir.chdir()
     c.add_path(py.path.local("."))
@@ -50,14 +44,14 @@ def test_catalog_save_and_restore(tmpdir):
     tmpdir.join("t2").write("Sample text 2")
     tmpdir.join("subdir", "t3").write("Sample text 3", ensure=True)
 
-    c = prybox.prybox.Catalog()
+    c = sbox.sbox.Catalog()
 
     tmpdir.chdir()
     c.add_path(py.path.local("."))
 
     c.save("catalog")
 
-    c = prybox.prybox.Catalog("catalog")
+    c = sbox.sbox.Catalog("catalog")
 
     ef1 = EncryptedFile(id=None, filename="t1", sha1="45aa94d570fb86da79b38a3b7f84f7230c84c01f", deleted=False)
     ef2 = EncryptedFile(id=None, filename="t2", sha1="53a569e56e43968cb548afb376a5a8f8761e09fe", deleted=False)
@@ -89,5 +83,5 @@ def test_encrypt_decrypt(tmpdir):
     old.chdir()
 
 
-def test_random_id():
-    assert len(prybox.prybox.random_id()) == prybox.prybox.OBJ_ID_LEN
+def test_random_hex():
+    assert len(random_hex(sbox.sbox.OBJ_ID_LEN)) == sbox.sbox.OBJ_ID_LEN
