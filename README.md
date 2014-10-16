@@ -8,3 +8,14 @@ Goals
 * Secure. Use only will established crypto tools with no hand-rolled solutions.
 * Simple to use. Rely on existing network cloud sync solutions.
 * Simple to verify. Users should be able to easily review and understand the source code.
+
+
+Design
+======
+
+Structure
+---------
+
+File System Monitoring
+----------------------
+[Watchdog](https://github.com/gorakhargosh/watchdog)
